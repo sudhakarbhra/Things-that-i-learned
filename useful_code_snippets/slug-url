@@ -1,0 +1,9 @@
+$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+$exp = explode("/",$actual_link);
+//print_r ($exp); 
+$fin = $exp[$val];  //$val last section of the url
+$final = explode(".php",$fin);
+//print_r($final);
+//print_r($final[0]);
+$list_final_url = $final[0];
