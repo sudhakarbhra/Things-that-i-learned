@@ -1,0 +1,67 @@
+<!-- js -->
+<!-- pre req : font awesome, color script -->
+<script>
+ $(document).ready(function(){
+        $('input[type="file"]').change(function(){
+            alert("trying");
+            $(this).parent().addClass('nowloading'); 
+              var file_data = $(this).prop("files")[0]; // Getting the properties of file from file field
+              var form_data = new FormData();           // Creating object of FormData class
+              form_data.append("file", file_data)       // Appending parameter named file with properties of file_field to form_data
+               console.log(form_data);
+              $.ajax({
+                url: "upload.php", // Upload Script
+                dataType: 'script',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: form_data, // Setting the data attribute of ajax with file_data
+                type: 'post',
+                beforeSend:function(){
+                     $('.nowloading span').html("<i class='fa fa-spinner fa-spin'></i> Uploading");
+                },
+                success: function(data) {
+                    $('.nowloading').addClass('green accent-3'); //adds background color
+                    $('.nowloading span').html("<i class='fa fa-check'></i> Completed");
+                    $('.nowloading').removeClass('nowloading');
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                    $('.nowloading').addClass('red accent-2'); //adds background color
+                    $('.nowloading span').html("<i class='fa fa-times'></i> Try Again");
+                    $('.nowloading').removeClass('nowloading');
+                }  
+              });
+        });
+    });
+    
+   
+</script>
+
+<style type="text/css">
+	.green{
+		background-color: green;
+	}.red{
+		background-color: red;
+	}
+</style>
+
+
+<!-- php upload.php -->
+<?php
+
+// print_r($_FILES['file']);
+// print_r($_POST);
+
+$folder_name = 'pdf_documents/';
+
+if(is_array($_FILES)) {
+    if(is_uploaded_file($_FILES['file']['tmp_name'])) {
+        $sourcePath = $_FILES['file']['tmp_name'];
+        $targetPath = $folder_name.$_FILES['file']['name'];
+        
+        if(move_uploaded_file($sourcePath,$targetPath)) {
+            echo $targetPath; 
+        }
+    }
+}
+?>
